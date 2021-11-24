@@ -157,7 +157,7 @@ pub const Coff = struct {
         try self.loadOptionalHeader();
     }
 
-    fn readStringFromTable(self: *Coff, offset: usize, buf: []u8) ![]const u8 {
+    pub fn readStringFromTable(self: *Coff, offset: usize, buf: []u8) ![]const u8 {
         if (self.coff_header.pointer_to_symbol_table == 0) {
             // No symbol table therefore no string table
             return error.MissingStringTable;
@@ -176,7 +176,7 @@ pub const Coff = struct {
         return str orelse "";
     }
 
-    fn loadOptionalHeader(self: *Coff) !void {
+    pub fn loadOptionalHeader(self: *Coff) !void {
         const in = self.in_file.reader();
         const opt_header_pos = try self.in_file.getPos();
 
@@ -340,7 +340,7 @@ pub const Coff = struct {
     }
 };
 
-const CoffHeader = struct {
+pub const CoffHeader = struct {
     machine: u16,
     number_of_sections: u16,
     timedate_stamp: u32,
@@ -350,8 +350,8 @@ const CoffHeader = struct {
     characteristics: u16,
 };
 
-const OptionalHeader = struct {
-    const DataDirectory = struct {
+pub const OptionalHeader = struct {
+    pub const DataDirectory = struct {
         virtual_address: u32,
         size: u32,
     };
@@ -361,7 +361,7 @@ const OptionalHeader = struct {
     image_base: u64,
 };
 
-const DebugDirectoryEntry = packed struct {
+pub const DebugDirectoryEntry = packed struct {
     characteristiccs: u32,
     time_date_stamp: u32,
     major_version: u16,
@@ -376,8 +376,8 @@ pub const Section = struct {
     header: SectionHeader,
 };
 
-const SectionHeader = struct {
-    const Misc = union {
+pub const SectionHeader = struct {
+    pub const Misc = union {
         physical_address: u32,
         virtual_size: u32,
     };
